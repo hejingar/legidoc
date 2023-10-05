@@ -1,12 +1,16 @@
 import 'package:dockable/constants.dart';
 import 'package:dockable/controllers/MenuAppController.dart';
-import 'package:dockable/screens/login/login_page.dart';
-import 'package:dockable/screens/main/main_screen.dart';
+import 'package:dockable/signup/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform ,
+  );
   runApp(const MyApp());
 }
 

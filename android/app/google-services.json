@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "67883710854",
+    "project_id": "legidoc-f50a9",
+    "storage_bucket": "legidoc-f50a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67883710854:android:3e79d51b748e27154cd407",
+        "android_client_info": {
+          "package_name": "com.example.dockable"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67883710854-1t9oe3oda42mn88410dj61v160uqa3uc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK2M4clcQ9em25f3pDX0_n_8C3DSPJmck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67883710854-1t9oe3oda42mn88410dj61v160uqa3uc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "67883710854-2vs0veu4fgngdc79nq12e4jhht8iagla.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.dockable.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

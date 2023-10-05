@@ -5,7 +5,7 @@ class Validator {
       return null;
     }
     if (name.isEmpty) {
-      return 'Name is empty';
+      return 'Ecrit qq chose frero';
     }
     return null;
   }
@@ -32,9 +32,9 @@ class Validator {
     }
 
     if (password.isEmpty) {
-      return 'Mdp empty';
+      return 'Mdp empty fdp';
     } else if (password.length < 4) {
-      return 'Mdp plus de 4 charactere ';
+      return 'Mdp plus de 4 charactere fdp';
     }
 
     return null;
