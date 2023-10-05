@@ -21,6 +21,11 @@ dependencies:
   oauth2: ^2.0.2
   http: ^0.13.5
 
+  firebase_core: ^2.15.1
+  firebase_auth: ^4.7.2
+  cloud_firestore: ^4.8.5
+  google_sign_in: ^5.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

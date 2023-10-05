@@ -38,7 +38,7 @@ class SideMenu extends StatelessWidget {
           //   },
           // ),
           DrawerListTile(
-            title: "AskMeAnything",
+            title: "Code Pénal",
             svgSrc: "assets/icons/menu_task.svg",
             press: () {
               onAskMeSelected();

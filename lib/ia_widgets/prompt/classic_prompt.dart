@@ -40,82 +40,11 @@ class _ClassicPromptPageState extends State<ClassicPrompt> {
   //===================================================================================
 
   
-  // void _sendMessage(String message) async{
-  //   if (message.trim().isEmpty) return;
-
-  //   setState(() {
-  //     _messages.add(ChatMessage(text: message, isUser: true));
-  //   });
-  //   controller.animateTo(
-  //     (1000 * _messages.length).toDouble(), 
-  //     duration: const Duration(milliseconds:500),
-  //     curve: Curves.ease
-  //     );
-
-  //   //===========================================================
-
-  //   final corpusKey = {
-  //     'customerId': '2000515465', 
-  //     'corpusId' : 1
-  //   };
-  //   final querySummary = {
-  //     'summarizerPromptName': 'vectara-summary-ext-v1.2.0', 
-  //     'maxSummarizedResults' : 5,
-  //     'responseLang' : language //zh chinois
-  //   };
-  //   final queryObj = {
-  //     'query': message, 
-  //     'start': 0, 
-  //     'numResults': 10, 
-  //     'corpusKey': [corpusKey],
-  //     'summary' : [querySummary]
-  //   };
-  //   final queryToEncode = {'query': [queryObj]};
-  //   print(jsonEncode(queryToEncode));
-    
-  //   final response = await http.post(
-  //     Uri.parse('https://api.vectara.io/v1/query'),
-  //     headers: <String, String> {
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json',
-  //       'customer-id' : '2000515465',
-  //       'x-api-key' : 'zqt_dz1xibnSIHqKr-q4HXWDQh4pMlclN5XSuMJbKw',
-  //     },
-  //     body: jsonEncode(queryToEncode),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     final lol = jsonDecode(response.body);
-  //     final xD = Utf8Decoder().convert(response.bodyBytes);
-  //     final resp = ResponseAGI.fromJson(json.decode(xD));
-
-  //     // final file = File('/mnt/nfs/homes/ael-youb/flutter/dockable/reponseAGI.json');
-  //     // await file.writeAsString(response.body);
-
-  //     print(resp.responseSet[0]["summary"][0]["text"]);
-      
-  //   _simulateResponseFromBot(resp.responseSet[0]["summary"][0]["text"]);
-  //   } else {
-  //     //throw Exception('Failed call to sauce magique API');
-  //     print(response.statusCode);
-  //     // print(jsonDecode(response.body));
-  //   }
-
-  //   //===========================================================
-
-  //   // REWORK THE SCROLLING CONTROLLER IF WE KEEPING THIS SOLUTION
-  //   //_simulateResponseFromBot(message);
-  //   controller.animateTo(
-  //     (100 * _messages.length).toDouble(), 
-  //     duration: const Duration(milliseconds:500),
-  //     curve: Curves.ease
-  //     );
-  // }
-
   void _sendMessage(String message) async{
     if (message.trim().isEmpty) return;
 
     setState(() {
-      _messages.add(ChatMessage(text: message, isUser: true, response: null,));
+      _messages.add(ChatMessage(text: message, isUser: true));
     });
     controller.animateTo(
       (1000 * _messages.length).toDouble(), 
@@ -125,16 +54,41 @@ class _ClassicPromptPageState extends State<ClassicPrompt> {
 
     //===========================================================
 
-    final queryToEncode = {'query': message};
-
+    final corpusKey = {
+      'customerId': '2000515465', 
+      'corpusId' : 2
+    };
+    final querySummary = {
+      'summarizerPromptName': 'vectara-summary-ext-v1.2.0', 
+      'maxSummarizedResults' : 2,
+      'responseLang' : language //zh chinois
+    };
+    final contextConfig = {
+      "charsBefore": 50,
+      "charsAfter": 50,
+      "sentencesBefore": 5,
+      "sentencesAfter": 5,
+      "startTag": "<b>",
+      "endTag": "</b>"
+    };
+    final queryObj = {
+      'query': message, 
+      'start': 0, 
+      'numResults': 10,
+      'contextConfig': contextConfig,
+      'corpusKey': [corpusKey],
+      'summary' : [querySummary]
+    };
+    final queryToEncode = {'query': [queryObj]};
     print(jsonEncode(queryToEncode));
     
     final response = await http.post(
-      Uri.http('api.docable.fr:8000', '/question'),
+      Uri.parse('https://api.vectara.io/v1/query'),
       headers: <String, String> {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         'Accept': 'application/json',
-        'Authorization' : 'Bearer ' + userToken,
+        'customer-id' : '2000515465',
+        'x-api-key' : 'zqt_dz1xieLWQ9ZJzdpzkudH7JrxpkCQW1V4kjnGSQ',
       },
       body: jsonEncode(queryToEncode),
     );
@@ -167,6 +121,63 @@ class _ClassicPromptPageState extends State<ClassicPrompt> {
       curve: Curves.ease
       );
   }
+
+  // void _sendMessage(String message) async{
+  //   if (message.trim().isEmpty) return;
+
+  //   setState(() {
+  //     _messages.add(ChatMessage(text: message, isUser: true, response: null,));
+  //   });
+  //   controller.animateTo(
+  //     (1000 * _messages.length).toDouble(), 
+  //     duration: const Duration(milliseconds:500),
+  //     curve: Curves.ease
+  //     );
+
+  //   //===========================================================
+
+  //   final queryToEncode = {'query': message};
+
+  //   print(jsonEncode(queryToEncode));
+    
+  //   final response = await http.post(
+  //     Uri.http('api.docable.fr:8000', '/question'),
+  //     headers: <String, String> {
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json',
+  //       'Authorization' : 'Bearer ' + userToken,
+  //     },
+  //     body: jsonEncode(queryToEncode),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     final uncoded = jsonDecode(response.body);
+  //     final decodedUtf = Utf8Decoder().convert(response.bodyBytes);
+  //     // final decodedUtf = utf8.decode(response.bodyBytes);
+  //     final responseFactored = ResponseAGI.fromJson(json.decode(decodedUtf));
+
+  //     // final file = File('/mnt/nfs/homes/ael-youb/flutter/dockable/reponseAGI.json');
+  //     // await file.writeAsString(response.body);
+
+  //     print(decodedUtf);
+  //     _responsesAI.add(responseFactored);
+  //     _simulateResponseFromBot(responseFactored.responseSet[0]["summary"][0]["text"], responseFactored);
+
+  //   } else {
+  //     //throw Exception('Failed call to sauce magique API');
+  //     print(response.statusCode);
+  //     // print(jsonDecode(response.body));
+  //   }
+
+  //   //===========================================================
+
+  //   // REWORK THE SCROLLING CONTROLLER IF WE KEEPING THIS SOLUTION
+  //   //_simulateResponseFromBot(message);
+  //   controller.animateTo(
+  //     (100 * _messages.length).toDouble(), 
+  //     duration: const Duration(milliseconds:500),
+  //     curve: Curves.ease
+  //     );
+  // }
 
   void _simulateResponseFromBot(String magicSauce, ResponseAGI response) {
     
@@ -278,10 +289,8 @@ class _ResponseMessageState extends State<ResponseMessage> {
                   color: Colors.black.withOpacity(0.8),
                   child: Material(
                     color: Colors.transparent,
-                    child: Text('GIVE ME THE QUOTES OMG',
+                    child: Text(widget.response!.responseSet[0]["response"][0]["text"],
                         style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.height * 0.03,
-                            //fontWeight: FontWeight.bold,
                             color: Colors.white)),
                   ),
                 ),
@@ -294,7 +303,7 @@ class _ResponseMessageState extends State<ResponseMessage> {
 
     overlayState.insertAll([overlay1]);
 
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 10));
 
     overlay1.remove();
 
