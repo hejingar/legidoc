@@ -36,11 +36,11 @@ class _DocPickerState extends State<DocPicker> {
           child: Responsive(
             mobile: SectorInfoCardGridView(
               crossAxisCount: size.width < 650 ? 2 : 4,
-              childAspectRatio: size.width < 650 ? 1.3 : 1,
+              childAspectRatio: size.width < 650 ? 1.3 : 1.2,
             ),
             tablet: const SectorInfoCardGridView(),
             desktop: SectorInfoCardGridView(
-              childAspectRatio: size.width < 1400 ? 1.1 : 1.4,
+              childAspectRatio: size.width < 1400 ? 1.1 : 1.8,
             ),
           ),
         ),
