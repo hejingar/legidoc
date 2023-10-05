@@ -269,43 +269,116 @@ class ResponseMessage extends StatefulWidget{
 
 class _ResponseMessageState extends State<ResponseMessage> {
   
-  void _showOverlay(BuildContext context) async {
-    OverlayState? overlayState = Overlay.of(context);
-    OverlayEntry overlay1;
-    overlay1 = OverlayEntry(builder: (context) {
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              //modify this to not obfuscate all the window (UX user clicks out of overlay to close it)
-              width: MediaQuery.of(context).size.width * 0.7,
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.02),
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  color: Colors.black.withOpacity(0.8),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Text(widget.response!.responseSet[0]["response"][0]["text"],
-                        style: TextStyle(
-                            color: Colors.white)),
-                  ),
+  OverlayEntry? overlay1;
+
+  void _closeOverlay() {
+    overlay1!.remove();
+  }
+
+  OverlayEntry _buildOverlay(BuildContext context) {
+    return OverlayEntry(builder: (context) {
+      return Stack(
+        children: [
+          GestureDetector(
+            // Captures only outside the overlay baby
+            onTap: () {
+              _closeOverlay();
+            },
+            child: Container(
+              color: Colors.transparent,
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.2),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      //modify this to not obfuscate all the window (UX user clicks out of overlay to close it)
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: EdgeInsets.all(defaultPadding),
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          color: Colors.black,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: ListView.builder(
+                              itemCount: 5, // Number of quotes HOPEFULLY TO CHANGE ==================================================
+                              itemBuilder: (BuildContext context, int index) {
+                                final quoteText = widget.response!.responseSet[0]["response"][index]["text"];
+                                final relevance = widget.response!.responseSet[0]["response"][index]["score"];
+                                final sourceQuote = widget.response!.responseSet[0]["document"][0]["id"];
+                                final quoteIndex = index + 1;
+            
+                                return Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Quote [$quoteIndex]",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      quoteText,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment : Alignment.centerRight,
+                                      child: Container(
+                                        decoration: BoxDecoration (
+                                          borderRadius: BorderRadius.circular(20),
+                                          color: Colors.black,
+                                        ),
+                                        padding: const EdgeInsets.all(defaultPadding),
+                                        child: Text(
+                                          "Relevance: $relevance  | Source : $sourceQuote",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: MediaQuery.of(context).size.height * 0.013,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                            )
+                          ),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _closeOverlay(); // Call this function to close the overlay
+                      },
+                      child: Text('Fermer Quotes'),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     });
+  }
 
-    overlayState.insertAll([overlay1]);
+  void _showOverlay(BuildContext context) {
+    OverlayState? overlayState = Overlay.of(context);
 
-    await Future.delayed(const Duration(seconds: 10));
+    overlay1 = _buildOverlay(context);
 
-    overlay1.remove();
+    overlayState.insertAll([overlay1!]);
 
   }
 
